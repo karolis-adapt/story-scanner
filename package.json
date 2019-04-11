@@ -1,0 +1,23 @@
+{
+  "name": "story-scanner",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "directory-tree": "2.2.1",
+    "minimist": "1.2.0"
+  },
+  "bin": {
+    "story-scanner": "./index.js"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/karolis-adapt/story-scanner.git"
+  }
+}
