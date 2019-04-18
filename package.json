@@ -1,6 +1,6 @@
 {
   "name": "story-scanner",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,8 @@
   "dependencies": {
     "chokidar": "2.1.5",
     "directory-tree": "2.2.1",
-    "minimist": "1.2.0"
+    "minimist": "1.2.0",
+    "ws": "6.2.1"
   },
   "bin": {
     "story-scanner": "./index.js"
@@ -20,8 +21,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/karolis-adapt/story-scanner.git"
-  },
-  "devDependencies": {
-    "ws": "6.2.1"
   }
 }
