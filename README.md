@@ -8,9 +8,11 @@ have associated `.stories.js` files in the same path.
 ## Usage
 
 Generate a `story-coverage.html`:
+
 `story-coverage src/components src/containers`
 
 Respond with contents of `story-coverage.html` over HTTP:
+
 `story-coverage src/components src/containers --listen`
 
 The `--listen` flag starts an HTTP server and a WebSocket server.
