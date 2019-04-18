@@ -11,14 +11,17 @@
         '[data-path="' + node.dataset.path.replace('.stories', '') + '"]'
       );
       if (testNode && node !== testNode) {
+        node.classList.remove('fail')
         node.classList.add('pass');
+        testNode.classList.remove('fail');
         testNode.classList.add('pass');
       }
     });
 
-    document.querySelectorAll('[data-path]:not(.pass)').forEach(
-      node => node.classList.add('fail')
-    );
+    document.querySelectorAll('[data-path]:not(.pass)').forEach(node => {
+      node.classList.remove('pass');
+      node.classList.add('fail')
+    });
 
     storyNodes.forEach(node => {
       if (!node.classList.contains('pass')) {
@@ -34,12 +37,15 @@
       if (!ulNode) {
         return;
       }
-      const passingNodes = ulNode.querySelectorAll('.pass');
-      const failingNodes = ulNode.querySelectorAll('.fail');
+      const passingNodes = ulNode.querySelectorAll('.pass:not([data-file="false"])');
+      const failingNodes = ulNode.querySelectorAll('.fail:not([data-file="false"])');
       const passes = passingNodes.length;
       const fails = failingNodes.length;
       const total = passes + fails;
       const percentage = Math.floor(passes / total * 100);
+      node.classList.remove('pass');
+      node.classList.remove('fail');
+      node.classList.remove('meh');
       if (percentage > 99) {
         node.classList.add('pass');
       } else if (percentage > 50) {
