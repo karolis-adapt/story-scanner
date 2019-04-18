@@ -1,6 +1,6 @@
 {
   "name": "story-scanner",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chokidar": "2.1.5",
     "directory-tree": "2.2.1",
     "minimist": "1.2.0"
   },
@@ -17,7 +18,7 @@
     "story-scanner": "./index.js"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/karolis-adapt/story-scanner.git"
+    "type": "git",
+    "url": "https://github.com/karolis-adapt/story-scanner.git"
   }
 }
