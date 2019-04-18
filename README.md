@@ -7,13 +7,13 @@ have associated `.stories.js` files in the same path.
 
 ## Usage
 
-Generate a `story-coverage.html`:
+-   Generate a `story-coverage.html`:
 
-`story-coverage src/components src/containers`
+    `story-coverage src/components src/containers`
 
-Respond with contents of `story-coverage.html` over HTTP:
+-   Respond with contents of `story-coverage.html` over HTTP:
 
-`story-coverage src/components src/containers --listen`
+    `story-coverage src/components src/containers --listen`
 
 The `--listen` flag starts an HTTP server and a WebSocket server.
 WebSocket connection is used to trigger a reload on all clients. The
