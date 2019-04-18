@@ -1,6 +1,6 @@
 {
   "name": "story-scanner",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/karolis-adapt/story-scanner.git"
+  },
+  "devDependencies": {
+    "ws": "6.2.1"
   }
 }

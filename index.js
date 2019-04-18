@@ -9,9 +9,12 @@ const dirTree = require('directory-tree');
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
+const WebSocket = require('ws');
 
+let broadcastTimeout;
 let lastDepth;
 let open;
+let ws;
 
 const readFileContents = (filename) => fs.readFileSync(
   path.resolve(`${__dirname}/${filename}`),
@@ -31,11 +34,7 @@ const print = (stream, obj, depth, isFile) => {
     open = open - (lastDepth - depth);
   }
   lastDepth = depth;
-  if (isFile) {
-    stream.write(`<li data-path="${ obj.path.replace(path.resolve('.'), '') }">`);
-  } else {
-    stream.write('<li>');
-  }
+  stream.write(`<li data-path="${ obj.path.replace(path.resolve('.'), '') }" data-file="${!!isFile}">`);
   stream.write(obj.name);
   stream.write('</li>');
 };
@@ -65,6 +64,18 @@ const walk = (stream, obj, depth = 0) => {
   }
 };
 
+const broadcast = (message) => {
+  try {
+    ws.clients.forEach(client => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  } catch (err) {
+    console.log('WebSocket message not sent');
+  }
+};
+
 const writeFile = () => {
   const stream = fs.createWriteStream(argv.filename);
   stream.write(`<!DOCTYPE html><title>${pageTitle}</title><style>${style}</style>`);
@@ -82,30 +93,34 @@ const writeFile = () => {
     stream.write('</ul>'.repeat((open || 0) + 1));
     stream.write('\n');
   });
+  stream.write(`<script>const socketPort = '${argv.port + 1}';</script>`);
   stream.write(`<script>${script}</script>`);
   stream.end();
+  clearTimeout(broadcastTimeout);
+  broadcastTimeout = setTimeout(() => broadcast('update'), 100);
 }
 
-//stream.once('open', fd => {
-  writeFile();
+writeFile();
 
-  if (argv.listen) {
-    const watcher = chokidar.watch(argv._);
-    watcher.on('add', writeFile).on('unlink', writeFile);
-    watcher.on('addDir', path => watcher.add(path));
-    watcher.on('unlinkDir', path => watcher.unwatch(path));
-    http.createServer((req, res) => {
-      const strm = fs.createReadStream(argv.filename);
-      strm.on('error', err => {
-        res.writeHeader(404, 'Not Found');
-        res.write('404: File Not Found!');
-        return res.end();
-      });
-      res.statusCode = 200;
-      strm.pipe(res);
-    }).listen(argv.port);
-  }
-//});
+if (argv.listen) {
+  const watcher = chokidar.watch(argv._);
+  watcher.on('add', writeFile).on('unlink', writeFile);
+  watcher.on('addDir', path => watcher.add(path));
+  watcher.on('unlinkDir', path => watcher.unwatch(path));
+
+  http.createServer((req, res) => {
+    const stream = fs.createReadStream(argv.filename);
+    stream.on('error', err => {
+      res.writeHeader(404, 'Not Found');
+      res.write('404: File Not Found!');
+      return res.end();
+    });
+    res.statusCode = 200;
+    stream.pipe(res);
+  }).listen(argv.port);
+
+  ws = new WebSocket.Server({ port: argv.port + 1 });
+}
 
 const cleanup = () => {
   try {
