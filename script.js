@@ -88,7 +88,18 @@
       node => paths.push(node.dataset.path)
     );
     localStorage.setItem('paths', paths.join('←'));
-    location.reload();
+    fetch(window.location.origin)
+      .then(r => r.text())
+      .then(html => {
+        const tempNode = document.createElement('html');
+        tempNode.innerHTML = html;
+        const contentNode = document.querySelector('.content');
+        contentNode.parentNode.replaceChild(
+          tempNode.querySelector('.content'),
+          contentNode
+        );
+        prepareList();
+      });
   }
 
   function connect() {

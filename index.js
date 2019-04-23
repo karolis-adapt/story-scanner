@@ -79,6 +79,7 @@ const broadcast = (message) => {
 const writeFile = () => {
   const stream = fs.createWriteStream(argv.filename);
   stream.write(`<!DOCTYPE html><title>${pageTitle}</title><style>${style}</style>`);
+  stream.write('<div class="content">');
   argv._.forEach(argPath => {
     lastDepth = 0;
     open = 0;
@@ -93,6 +94,7 @@ const writeFile = () => {
     stream.write('</ul>'.repeat((open || 0) + 1));
     stream.write('\n');
   });
+  stream.write('</div>');
   stream.write(`<script>const socketPort = '${argv.port + 1}';</script>`);
   stream.write(`<script>${script}</script>`);
   stream.end();
