@@ -20,6 +20,21 @@ WebSocket connection is used to trigger a reload on all clients. The
 WebSocket connection is started on port that is provided + 1 (e.g. if
 `-p` is `6060`, then the WS port would be `6061`).
 
+## Config
+
+`.story-scanner.json` may be provided in the root dir to describe config
+options. Currently there is only one option called `ignored`. It
+accepts an array of filepaths that should be counted as passing without
+checking if they have associated `.stories.js` files.
+
+```
+{
+  "ignored": [
+    "src/components/Thing.js"
+  ]
+}
+```
+
 ## Arguments
 
 -   `--filename, -f` (default: `story-coverage.html`) -- outputs HTML to

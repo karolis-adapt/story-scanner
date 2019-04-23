@@ -21,6 +21,13 @@ const readFileContents = (filename) => fs.readFileSync(
   { encoding: 'utf-8', flag: 'r' }
 );
 
+let config;
+
+try {
+  config = require(path.resolve('./.story-scanner.json'));
+} catch (err) {
+}
+
 const style = readFileContents('style.css');
 const script = readFileContents('script.js');
 
@@ -34,7 +41,7 @@ const print = (stream, obj, depth, isFile) => {
     open = open - (lastDepth - depth);
   }
   lastDepth = depth;
-  stream.write(`<li data-path="${ obj.path.replace(path.resolve('.'), '') }" data-file="${!!isFile}">`);
+  stream.write(`<li data-path="${ obj.path.replace(path.resolve('.') + '/', '') }" data-file="${!!isFile}">`);
   stream.write(obj.name);
   stream.write('</li>');
 };
@@ -96,6 +103,7 @@ const writeFile = () => {
   });
   stream.write('</div>');
   stream.write(`<script>const socketPort = '${argv.port + 1}';</script>`);
+  stream.write(`<script>const ignoredPaths = ${JSON.stringify(config.ignored)}</script>`);
   stream.write(`<script>${script}</script>`);
   stream.end();
   clearTimeout(broadcastTimeout);

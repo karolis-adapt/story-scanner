@@ -1,10 +1,20 @@
-/* global socketPort */
+/* global socketPort, ignoredPaths */
 
 (function () {
 
   function prepareList() {
 
     const storyNodes = document.querySelectorAll('[data-path$=".stories.js"]');
+
+    const ignoredNodes = (
+      ignoredPaths
+        .map(path => document.querySelector(`[data-path="${path}"]`))
+        .filter(node => node)
+    );
+
+    ignoredNodes.forEach(node => {
+      node.classList.add('ignored');
+    });
 
     storyNodes.forEach(node => {
       const testNode = document.querySelector(
@@ -18,7 +28,7 @@
       }
     });
 
-    document.querySelectorAll('[data-path]:not(.pass)').forEach(node => {
+    document.querySelectorAll('[data-path]:not(.pass):not(.ignored)').forEach(node => {
       node.classList.remove('pass');
       node.classList.add('fail')
     });
@@ -42,7 +52,11 @@
       const passes = passingNodes.length;
       const fails = failingNodes.length;
       const total = passes + fails;
-      const percentage = Math.floor(passes / total * 100);
+      const percentage = (
+        (passes === 0 && fails === 0) ?
+          100 :
+          Math.floor(passes / total * 100)
+      );
       node.classList.remove('pass');
       node.classList.remove('fail');
       node.classList.remove('meh');

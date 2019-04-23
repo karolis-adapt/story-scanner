@@ -4,7 +4,8 @@ html {
 
 .pass::before,
 .fail::before,
-.meh::before {
+.meh::before,
+.ignored::before {
   border-radius: 50%;
   content: "";
   display: inline-block;
@@ -19,6 +20,7 @@ html {
 .pass::before { background: #4d9221; }
 .fail::before { background: #bb213a; }
 .meh::before { background: #bbb621; }
+.ignored::before { background: #bbb; }
 
 .collapsable::before {
   background: transparent;
