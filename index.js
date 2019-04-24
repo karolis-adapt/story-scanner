@@ -28,29 +28,34 @@ try {
 } catch (err) {
 }
 
-const legend = readFileContents('legend.html');
-const style = readFileContents('style.css');
-const script = readFileContents('script.js');
+const template = readFileContents('template/index.html');
 
-const print = (stream, obj, depth, isFile) => {
+const data = {
+  ignoredPaths: JSON.stringify(config.ignored),
+  legend: readFileContents('template/legend.html'),
+  pageTitle: `${path.basename(path.resolve('.'))} story coverage`,
+  script: readFileContents('public/script.js'),
+  socketPort: argv.port + 1,
+  style: readFileContents('public/style.css'),
+};
+
+const print = (content, obj, depth, isFile) => {
   if (depth > lastDepth) {
-    stream.write('<ul>');
+    content.push('<li><ul>');
     open++;
   }
   if (depth < lastDepth) {
-    stream.write('</ul>'.repeat(lastDepth - depth));
+    content.push('</ul></li>'.repeat(lastDepth - depth));
     open = open - (lastDepth - depth);
   }
   lastDepth = depth;
-  stream.write(`<li data-path="${ obj.path.replace(path.resolve('.') + '/', '') }" data-file="${!!isFile}">`);
-  stream.write(obj.name);
-  stream.write('</li>');
+  content.push(`<li data-path="${ obj.path.replace(path.resolve('.') + '/', '') }" data-file="${!!isFile}">`);
+  content.push(obj.name);
+  content.push('</li>');
 };
 
-const pageTitle = `${path.basename(path.resolve('.'))} story coverage`;
-
-const walk = (stream, obj, depth = 0) => {
-  print(stream, obj, depth, obj.type === 'file');
+const walk = (content, obj, depth = 0) => {
+  print(content, obj, depth, obj.type === 'file');
   if (obj.children) {
     obj.children.sort((a, b) => {
       if (a.type === 'directory' && b.type === 'file') {
@@ -68,7 +73,7 @@ const walk = (stream, obj, depth = 0) => {
         return 1;
       }
       return 0;
-    }).forEach(child => walk(stream, child, depth + 1));
+    }).forEach(child => walk(content, child, depth + 1));
   }
 };
 
@@ -84,33 +89,35 @@ const broadcast = (message) => {
   }
 };
 
-const writeFile = () => {
-  const stream = fs.createWriteStream(argv.filename);
-  stream.write(`<!DOCTYPE html><title>${pageTitle}</title><style>${style}</style>`);
-  stream.write(legend);
-  stream.write('<div class="content">');
+const generateContent = () => {
+  const content = [];
   argv._.forEach(argPath => {
     lastDepth = 0;
     open = 0;
-    stream.write('<ul>\n');
+    content.push('<ul>');
     walk(
-      stream,
+      content,
       dirTree(
         path.resolve(argPath),
         { extensions: /\.js$/, exclude: /\.spec\.js$/ }
       )
     );
-    stream.write('</ul>'.repeat((open || 0) + 1));
-    stream.write('\n');
+    content.push('</ul>'.repeat((open || 0) + 1));
+    content.push('\n');
   });
-  stream.write('</div>');
-  stream.write(`<script>const socketPort = '${argv.port + 1}';</script>`);
-  stream.write(`<script>const ignoredPaths = ${JSON.stringify(config.ignored)}</script>`);
-  stream.write(`<script>${script}</script>`);
+  return content.join('');
+};
+
+const writeFile = () => {
+  const stream = fs.createWriteStream(argv.filename);
+  data.content = generateContent();
+  stream.write(
+    template.replace(/\$\{(\w*)\}/g, (match, key) => data[key])
+  );
   stream.end();
   clearTimeout(broadcastTimeout);
   broadcastTimeout = setTimeout(() => broadcast('update'), 100);
-}
+};
 
 writeFile();
 

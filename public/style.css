@@ -85,6 +85,10 @@ li {
   padding: 0.2em 0;
 }
 
+li > ul {
+  margin: -0.4em 0;
+}
+
 .collapsable { cursor: pointer; }
-.collapsed + ul { display: none; }
+.collapsed + li { display: none; }
 
