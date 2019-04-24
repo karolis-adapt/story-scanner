@@ -49,8 +49,10 @@
       }
       const passingNodes = ulNode.querySelectorAll('.pass:not([data-file="false"])');
       const failingNodes = ulNode.querySelectorAll('.fail:not([data-file="false"])');
+      const ignoredNodes = ulNode.querySelectorAll('.ignored:not([data-file="false"])');
       const passes = passingNodes.length;
       const fails = failingNodes.length;
+      const ignores = ignoredNodes.length;
       const total = passes + fails;
       const percentage = (
         (passes === 0 && fails === 0) ?
@@ -80,7 +82,8 @@
       node.click();
       node.setAttribute('role', 'button');
       node.setAttribute('tabindex', 0);
-      node.innerHTML = '<span class="title">' + node.innerHTML + '</span> <span class="progress"><span class="progress__bar" style="width: ' + percentage + '%"></span></span><span>' + percentage + '% (' + passes + ' passing, out of ' + total + ')</span>';
+      const ignoredStr = ignores ? ', [with ' + ignores + ' ignored]' : '';
+      node.innerHTML = '<span class="title">' + node.innerHTML + '</span> <span class="progress"><span class="progress__bar" style="width: ' + percentage + '%"></span></span><span>' + percentage + '% (' + passes + ' passing, out of ' + total + ignoredStr + ')</span>';
     });
 
     const paths = (localStorage.getItem('paths') || '').split('←');

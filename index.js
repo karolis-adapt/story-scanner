@@ -28,6 +28,7 @@ try {
 } catch (err) {
 }
 
+const legend = readFileContents('legend.html');
 const style = readFileContents('style.css');
 const script = readFileContents('script.js');
 
@@ -86,6 +87,7 @@ const broadcast = (message) => {
 const writeFile = () => {
   const stream = fs.createWriteStream(argv.filename);
   stream.write(`<!DOCTYPE html><title>${pageTitle}</title><style>${style}</style>`);
+  stream.write(legend);
   stream.write('<div class="content">');
   argv._.forEach(argPath => {
     lastDepth = 0;

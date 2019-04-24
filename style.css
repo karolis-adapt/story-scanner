@@ -22,6 +22,18 @@ html {
 .meh::before { background: #bbb621; }
 .ignored::before { background: #bbb; }
 
+.legend {
+  border-bottom: 1px solid #ddd;
+  padding: 0 0 10px 40px;
+}
+
+.legend .pass,
+.legend .fail,
+.legend .meh,
+.legend .ignored {
+  margin-left: 47px;
+}
+
 .collapsable::before {
   background: transparent;
   border-style: solid;
@@ -69,8 +81,8 @@ html {
 
 li {
   display: block;
-  margin: 0.2em;
-  padding: 0.2em;
+  margin: 0.2em 0;
+  padding: 0.2em 0;
 }
 
 .collapsable { cursor: pointer; }
