@@ -21,11 +21,14 @@ const readFileContents = (filename) => fs.readFileSync(
   { encoding: 'utf-8', flag: 'r' }
 );
 
-let config;
+let config = {
+  ignored: [],
+};
 
 try {
   config = require(path.resolve('./.story-scanner.json'));
 } catch (err) {
+  // It's fine. The file might not be created.
 }
 
 const template = readFileContents('template/index.html');
