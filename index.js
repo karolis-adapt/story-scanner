@@ -102,7 +102,7 @@ const generateContent = () => {
       content,
       dirTree(
         path.resolve(argPath),
-        { extensions: /\.js$/, exclude: /\.(spec|test)\.js$/ }
+        { extensions: /\.(js|ts|tsx)$/, exclude: /\.(spec|test)\.(js|ts|tsx)$/ }
       )
     );
     content.push('</ul>'.repeat((open || 0) + 1));
