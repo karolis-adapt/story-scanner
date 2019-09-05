@@ -24,9 +24,10 @@
 
     // Mark passing files and remove story-files.
     document.querySelectorAll('[data-path$=".stories.js"]').forEach(node => {
+      const rootFileName = node.dataset.path.replace('.stories', '');
       const associatedFileNode = (
         document.querySelector(
-          `[data-path="${node.dataset.path.replace('.stories', '')}"]`
+          `[data-path="${rootFileName}"], [data-path="${rootFileName.replace('.js', '.tsx')}"]`
         )
       );
       if (!associatedFileNode) {
