@@ -13,7 +13,7 @@
     "chokidar": "2.1.5",
     "directory-tree": "2.2.1",
     "minimist": "1.2.0",
-    "ws": "6.2.1"
+    "ws": "7.4.6"
   },
   "bin": {
     "story-scanner": "./index.js"
